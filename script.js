@@ -12,26 +12,26 @@ const generateId = () => {
 const getNotesFromStorage = () => {
     try {
         const notes = localStorage.getItem('notes');
-        console.log('Raw notes from storage:', notes); // Debug log
+        console.log('Raw notes from storage:', notes);
         
         if (!notes) {
-            console.log('No notes found in storage'); // Debug log
+            console.log('No notes found in storage');
             return [];
         }
         
         const parsedNotes = JSON.parse(notes);
-        console.log('Parsed notes:', parsedNotes); // Debug log
+        console.log('Parsed notes:', parsedNotes);
         
         if (!Array.isArray(parsedNotes)) {
-            console.log('Notes is not an array, resetting to empty array'); // Debug log
-            localStorage.removeItem('notes'); // Reset corrupted data
+            console.log('Notes is not an array, resetting to empty array');
+            localStorage.removeItem('notes');
             return [];
         }
         
         return parsedNotes;
     } catch (error) {
         console.error('Error reading from storage:', error);
-        localStorage.removeItem('notes'); // Reset corrupted data
+        localStorage.removeItem('notes');
         return [];
     }
 };
@@ -43,7 +43,7 @@ const saveNote = () => {
         try {
             // Lấy danh sách ghi chú hiện tại
             const notes = getNotesFromStorage();
-            console.log('Current notes before save:', notes); // Debug log
+            console.log('Current notes before save:', notes);
             
             // Thêm ghi chú mới
             const newNoteObj = {
@@ -51,13 +51,13 @@ const saveNote = () => {
                 content: newNote,
                 timestamp: new Date().toLocaleString()
             };
-            console.log('New note to be added:', newNoteObj); // Debug log
+            console.log('New note to be added:', newNoteObj);
             
             notes.push(newNoteObj);
             
             // Lưu lại vào localStorage
             const notesString = JSON.stringify(notes);
-            console.log('Saving notes to storage:', notesString); // Debug log
+            console.log('Saving notes to storage:', notesString);
             localStorage.setItem('notes', notesString);
             
             noteInput.value = ''; // Xóa nội dung trong textarea sau khi lưu
@@ -72,21 +72,21 @@ const saveNote = () => {
 // Hàm để tải danh sách ghi chú
 const loadNotes = () => {
     try {
-        console.log('Loading notes...'); // Debug log
+        console.log('Loading notes...');
         const notes = getNotesFromStorage();
-        console.log('Notes loaded:', notes); // Debug log
+        console.log('Notes loaded:', notes);
         
         notesList.innerHTML = '';
         
         if (notes.length === 0) {
-            console.log('No notes to display'); // Debug log
+            console.log('No notes to display');
             notesList.innerHTML = '<li class="empty-note">Chưa có ghi chú nào</li>';
             return;
         }
         
         notes.forEach((note, index) => {
             try {
-                console.log(`Processing note ${index}:`, note); // Debug log
+                console.log(`Processing note ${index}:`, note);
                 const li = document.createElement('li');
                 li.innerHTML = `
                     <div class="note-content">${note.content || ''}</div>
@@ -109,7 +109,7 @@ saveButton.addEventListener('click', saveNote);
 // Tải ghi chú khi trang được load
 window.onload = () => {
     try {
-        console.log('Page loaded, initializing...'); // Debug log
+        console.log('Page loaded, initializing...');
         loadNotes();
     } catch (error) {
         console.error('Error during initialization:', error);
