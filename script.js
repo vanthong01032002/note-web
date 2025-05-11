@@ -12,14 +12,26 @@ const generateId = () => {
 const getNotesFromStorage = () => {
     try {
         const notes = localStorage.getItem('notes');
-        if (!notes) return [];
+        console.log('Raw notes from storage:', notes); // Debug log
+        
+        if (!notes) {
+            console.log('No notes found in storage'); // Debug log
+            return [];
+        }
         
         const parsedNotes = JSON.parse(notes);
-        if (!Array.isArray(parsedNotes)) return [];
+        console.log('Parsed notes:', parsedNotes); // Debug log
+        
+        if (!Array.isArray(parsedNotes)) {
+            console.log('Notes is not an array, resetting to empty array'); // Debug log
+            localStorage.removeItem('notes'); // Reset corrupted data
+            return [];
+        }
         
         return parsedNotes;
     } catch (error) {
-        console.error('Lỗi khi đọc dữ liệu:', error);
+        console.error('Error reading from storage:', error);
+        localStorage.removeItem('notes'); // Reset corrupted data
         return [];
     }
 };
@@ -31,21 +43,27 @@ const saveNote = () => {
         try {
             // Lấy danh sách ghi chú hiện tại
             const notes = getNotesFromStorage();
+            console.log('Current notes before save:', notes); // Debug log
             
             // Thêm ghi chú mới
-            notes.push({
+            const newNoteObj = {
                 id: generateId(),
                 content: newNote,
                 timestamp: new Date().toLocaleString()
-            });
+            };
+            console.log('New note to be added:', newNoteObj); // Debug log
+            
+            notes.push(newNoteObj);
             
             // Lưu lại vào localStorage
-            localStorage.setItem('notes', JSON.stringify(notes));
+            const notesString = JSON.stringify(notes);
+            console.log('Saving notes to storage:', notesString); // Debug log
+            localStorage.setItem('notes', notesString);
             
             noteInput.value = ''; // Xóa nội dung trong textarea sau khi lưu
             loadNotes(); // Tải lại danh sách ghi chú
         } catch (error) {
-            console.error('Lỗi khi lưu ghi chú:', error);
+            console.error('Error saving note:', error);
             alert('Có lỗi xảy ra khi lưu ghi chú!');
         }
     }
@@ -54,24 +72,33 @@ const saveNote = () => {
 // Hàm để tải danh sách ghi chú
 const loadNotes = () => {
     try {
+        console.log('Loading notes...'); // Debug log
         const notes = getNotesFromStorage();
+        console.log('Notes loaded:', notes); // Debug log
+        
         notesList.innerHTML = '';
         
         if (notes.length === 0) {
+            console.log('No notes to display'); // Debug log
             notesList.innerHTML = '<li class="empty-note">Chưa có ghi chú nào</li>';
             return;
         }
         
-        notes.forEach(note => {
-            const li = document.createElement('li');
-            li.innerHTML = `
-                <div class="note-content">${note.content}</div>
-                <div class="note-time">${note.timestamp}</div>
-            `;
-            notesList.appendChild(li);
+        notes.forEach((note, index) => {
+            try {
+                console.log(`Processing note ${index}:`, note); // Debug log
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <div class="note-content">${note.content || ''}</div>
+                    <div class="note-time">${note.timestamp || 'Không có thời gian'}</div>
+                `;
+                notesList.appendChild(li);
+            } catch (noteError) {
+                console.error(`Error processing note ${index}:`, noteError);
+            }
         });
     } catch (error) {
-        console.error('Lỗi khi tải ghi chú:', error);
+        console.error('Error loading notes:', error);
         notesList.innerHTML = '<li class="error-note">Có lỗi xảy ra khi tải ghi chú</li>';
     }
 };
@@ -80,4 +107,11 @@ const loadNotes = () => {
 saveButton.addEventListener('click', saveNote);
 
 // Tải ghi chú khi trang được load
-window.onload = loadNotes;
+window.onload = () => {
+    try {
+        console.log('Page loaded, initializing...'); // Debug log
+        loadNotes();
+    } catch (error) {
+        console.error('Error during initialization:', error);
+    }
+};
