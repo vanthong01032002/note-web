@@ -56,3 +56,13 @@ li {
     border-radius: 5px;
     border: 1px solid #ddd;
 }
+
+.note-content {
+    margin-bottom: 5px;
+}
+
+.note-time {
+    font-size: 0.8em;
+    color: #666;
+    text-align: right;
+}

@@ -3,31 +3,29 @@ const saveButton = document.getElementById('save-button');
 const noteInput = document.getElementById('note-input');
 const notesList = document.getElementById('notes-list');
 
-// Hàm để tạo tên file duy nhất
-const generateFileName = () => {
-    const timestamp = new Date().getTime();
-    return `note_${timestamp}.txt`;
+// Hàm để tạo ID duy nhất
+const generateId = () => {
+    return Date.now().toString();
 };
 
-// Hàm để lưu ghi chú vào file
-const saveNote = async () => {
+// Hàm để lưu ghi chú
+const saveNote = () => {
     const newNote = noteInput.value.trim();
     if (newNote) {
         try {
-            // Yêu cầu quyền truy cập thư mục database
-            const dirHandle = await window.showDirectoryPicker({
-                id: 'database',
-                mode: 'readwrite',
-                startIn: 'documents'
+            // Lấy danh sách ghi chú hiện tại
+            const notes = JSON.parse(localStorage.getItem('notes') || '[]');
+            
+            // Thêm ghi chú mới
+            notes.push({
+                id: generateId(),
+                content: newNote,
+                timestamp: new Date().toLocaleString()
             });
-
-            // Tạo file mới
-            const fileName = generateFileName();
-            const fileHandle = await dirHandle.getFileHandle(fileName, { create: true });
-            const writable = await fileHandle.createWritable();
-            await writable.write(newNote);
-            await writable.close();
-
+            
+            // Lưu lại vào localStorage
+            localStorage.setItem('notes', JSON.stringify(notes));
+            
             noteInput.value = ''; // Xóa nội dung trong textarea sau khi lưu
             loadNotes(); // Tải lại danh sách ghi chú
         } catch (error) {
@@ -38,28 +36,19 @@ const saveNote = async () => {
 };
 
 // Hàm để tải danh sách ghi chú
-const loadNotes = async () => {
+const loadNotes = () => {
     try {
-        // Yêu cầu quyền truy cập thư mục database
-        const dirHandle = await window.showDirectoryPicker({
-            id: 'database',
-            mode: 'read',
-            startIn: 'documents'
-        });
-
+        const notes = JSON.parse(localStorage.getItem('notes') || '[]');
         notesList.innerHTML = '';
         
-        // Đọc tất cả các file trong thư mục
-        for await (const entry of dirHandle.values()) {
-            if (entry.kind === 'file' && entry.name.endsWith('.txt')) {
-                const file = await entry.getFile();
-                const content = await file.text();
-                
-                const li = document.createElement('li');
-                li.textContent = content;
-                notesList.appendChild(li);
-            }
-        }
+        notes.forEach(note => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+                <div class="note-content">${note.content}</div>
+                <div class="note-time">${note.timestamp}</div>
+            `;
+            notesList.appendChild(li);
+        });
     } catch (error) {
         console.error('Lỗi:', error);
         alert('Có lỗi xảy ra khi tải ghi chú!');
