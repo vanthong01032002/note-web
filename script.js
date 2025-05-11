@@ -8,13 +8,29 @@ const generateId = () => {
     return Date.now().toString();
 };
 
+// Hàm để lấy danh sách ghi chú từ localStorage
+const getNotesFromStorage = () => {
+    try {
+        const notes = localStorage.getItem('notes');
+        if (!notes) return [];
+        
+        const parsedNotes = JSON.parse(notes);
+        if (!Array.isArray(parsedNotes)) return [];
+        
+        return parsedNotes;
+    } catch (error) {
+        console.error('Lỗi khi đọc dữ liệu:', error);
+        return [];
+    }
+};
+
 // Hàm để lưu ghi chú
 const saveNote = () => {
     const newNote = noteInput.value.trim();
     if (newNote) {
         try {
             // Lấy danh sách ghi chú hiện tại
-            const notes = JSON.parse(localStorage.getItem('notes') || '[]');
+            const notes = getNotesFromStorage();
             
             // Thêm ghi chú mới
             notes.push({
@@ -29,7 +45,7 @@ const saveNote = () => {
             noteInput.value = ''; // Xóa nội dung trong textarea sau khi lưu
             loadNotes(); // Tải lại danh sách ghi chú
         } catch (error) {
-            console.error('Lỗi:', error);
+            console.error('Lỗi khi lưu ghi chú:', error);
             alert('Có lỗi xảy ra khi lưu ghi chú!');
         }
     }
@@ -38,8 +54,13 @@ const saveNote = () => {
 // Hàm để tải danh sách ghi chú
 const loadNotes = () => {
     try {
-        const notes = JSON.parse(localStorage.getItem('notes') || '[]');
+        const notes = getNotesFromStorage();
         notesList.innerHTML = '';
+        
+        if (notes.length === 0) {
+            notesList.innerHTML = '<li class="empty-note">Chưa có ghi chú nào</li>';
+            return;
+        }
         
         notes.forEach(note => {
             const li = document.createElement('li');
@@ -50,8 +71,8 @@ const loadNotes = () => {
             notesList.appendChild(li);
         });
     } catch (error) {
-        console.error('Lỗi:', error);
-        alert('Có lỗi xảy ra khi tải ghi chú!');
+        console.error('Lỗi khi tải ghi chú:', error);
+        notesList.innerHTML = '<li class="error-note">Có lỗi xảy ra khi tải ghi chú</li>';
     }
 };
 
