@@ -1,68 +1,182 @@
+/* Reset và biến */
+:root {
+    --primary-color: #4CAF50;
+    --primary-hover: #45a049;
+    --background-color: #f5f5f5;
+    --container-bg: #ffffff;
+    --text-color: #333333;
+    --border-color: #e0e0e0;
+    --shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    margin: 0;
+    padding: 20px;
 }
 
 .container {
-    background-color: white;
+    background-color: var(--container-bg);
+    border-radius: 15px;
+    box-shadow: var(--shadow);
+    width: 100%;
+    max-width: 800px;
+    overflow: hidden;
+}
+
+/* Header */
+header {
+    background-color: var(--primary-color);
+    color: white;
     padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 400px;
     text-align: center;
+}
+
+header h1 {
+    font-size: 2em;
+    font-weight: 500;
+}
+
+header h1 i {
+    margin-right: 10px;
+}
+
+/* Main content */
+main {
+    padding: 20px;
+}
+
+.note-input-container {
+    margin-bottom: 30px;
 }
 
 textarea {
     width: 100%;
     height: 150px;
-    padding: 10px;
-    margin: 10px 0;
-    border-radius: 5px;
-    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 15px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    resize: vertical;
+    font-family: inherit;
+    font-size: 1em;
+    transition: var(--transition);
+}
+
+textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
 }
 
 button {
-    padding: 10px 20px;
-    background-color: #4CAF50;
+    padding: 12px 24px;
+    background-color: var(--primary-color);
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
+    font-size: 1em;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    transition: var(--transition);
+}
+
+button i {
+    margin-right: 8px;
 }
 
 button:hover {
-    background-color: #45a049;
+    background-color: var(--primary-hover);
+    transform: translateY(-1px);
 }
 
+button:active {
+    transform: translateY(0);
+}
+
+/* Notes section */
 #saved-notes {
-    margin-top: 20px;
-    text-align: left;
+    margin-top: 30px;
+}
+
+#saved-notes h2 {
+    font-size: 1.5em;
+    margin-bottom: 20px;
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+}
+
+#saved-notes h2 i {
+    margin-right: 10px;
+    color: var(--primary-color);
+}
+
+.notes-container {
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.notes-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.notes-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.notes-container::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.notes-container::-webkit-scrollbar-thumb:hover {
+    background: #555;
 }
 
 ul {
     list-style-type: none;
-    padding-left: 0;
 }
 
 li {
-    background-color: #f9f9f9;
-    margin: 5px 0;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ddd;
+    background-color: white;
+    margin: 10px 0;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    transition: var(--transition);
+}
+
+li:hover {
+    transform: translateX(5px);
+    box-shadow: var(--shadow);
 }
 
 .note-content {
-    margin-bottom: 5px;
+    margin-bottom: 10px;
+    font-size: 1.1em;
+    line-height: 1.5;
 }
 
 .note-time {
-    font-size: 0.8em;
+    font-size: 0.85em;
     color: #666;
     text-align: right;
 }
@@ -71,8 +185,9 @@ li {
     text-align: center;
     color: #666;
     font-style: italic;
-    background-color: #f5f5f5;
-    border: 1px dashed #ddd;
+    background-color: #f9f9f9;
+    border: 2px dashed var(--border-color);
+    padding: 20px;
 }
 
 .error-note {
@@ -80,4 +195,34 @@ li {
     color: #721c24;
     background-color: #f8d7da;
     border: 1px solid #f5c6cb;
+    padding: 20px;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-top: 1px solid var(--border-color);
+    color: #666;
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+    .container {
+        border-radius: 0;
+    }
+    
+    body {
+        padding: 0;
+    }
+    
+    header h1 {
+        font-size: 1.5em;
+    }
+    
+    button {
+        width: 100%;
+        justify-content: center;
+    }
 }

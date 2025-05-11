@@ -5,17 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ghi Chú</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <div class="container">
-        <h1>Trang Ghi Chú</h1>
-        <textarea id="note-input" placeholder="Nhập ghi chú của bạn tại đây..."></textarea>
-        <button id="save-button">Lưu Ghi Chú</button>
-        <div id="saved-notes">
-            <h2>Các ghi chú đã lưu:</h2>
-            <ul id="notes-list"></ul>
-        </div>
+        <header>
+            <h1><i class="fas fa-sticky-note"></i> Ghi Chú</h1>
+        </header>
+        
+        <main>
+            <div class="note-input-container">
+                <textarea id="note-input" placeholder="Nhập ghi chú của bạn tại đây..."></textarea>
+                <button id="save-button">
+                    <i class="fas fa-save"></i> Lưu Ghi Chú
+                </button>
+            </div>
+
+            <div id="saved-notes">
+                <h2><i class="fas fa-list"></i> Các ghi chú đã lưu</h2>
+                <div class="notes-container">
+                    <ul id="notes-list"></ul>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>© 2024 Ghi Chú App</p>
+        </footer>
     </div>
-    <script src="script.js?v=1.0.2"></script>
+    <script src="script.js?v=1.0.3"></script>
 </body>
 </html>
